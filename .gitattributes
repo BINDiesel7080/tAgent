@@ -1,0 +1,33 @@
+# .gitattributes — нормализация переносов строк и метки бинарников.
+#
+# В репозитории установлен core.autocrlf=true, поэтому любые бинарники,
+# попавшие в индекс без явной метки, рискуют порчей (CRLF-конвертация
+# ломает .pkl/.db/.zip/.png и веса SB3 без расширения). Бинарные метки
+# обязательны, чтобы git никогда не конвертировал эти файлы.
+#
+# Порядок важен: последнее совпавшее правило выигрывает.
+
+# Базовая автонормализация текста в индексе
+* text=auto
+
+# Исходники и текст — всегда LF, без исключений по платформе
+*.py text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.gitignore text eol=lf
+*.gitattributes text eol=lf
+
+# Бинарные артефакты: без конвертации, без diff
+*.pkl binary
+*.db binary -diff
+*.db-wal binary -diff
+*.db-shm binary -diff
+*.zip binary
+*.png binary
+*.csv binary
+*.h5 binary
+*.npy binary
+
+# Веса Stable-Baselines3 сохраняются БЕЗ расширения (.zip-архив внутри) —
+# шаблон по имени обязателен, иначе autocrlf испортит архив в индексе.
+ppo_portfolio_* binary
